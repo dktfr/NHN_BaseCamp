@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Page</title>
+</head>
+<body>
+<center>
+<h2>Add Page</h2>
+<form action="./ControllerServlet" method="post">
+	<input type="hidden" name="action" value="add"/>
+	<table align="center">
+		<tr align="center">
+			<td align="right">E-mail : </td>
+			<td><input type="text" name="email"/></td>
+		</tr>
+		<tr align="center">
+			<td align="right">Password : </td>
+			<td><input type="password" name="pwd"/></td>
+		</tr>
+		<tr align="center">
+			<td align="right">Content : </td>
+			<td><input type="text" name="content" style="height:100px"/></td>
+		</tr>
+	</table>
+	<input type="submit" value="Submit"/>
+</form>
+</center>
+</body>
+</html>
