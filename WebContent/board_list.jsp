@@ -25,7 +25,7 @@
 %>
 	<tr>
 		<td align="center" width="20%"><%=b.getEmail() %></td>
-		<td align="center" width="55%"><%=b.getContent() %></td>
+		<td align="center" width="55%"><a href="./ControllerServlet?action=modifing&num=<%=b.getNum()%>"><%=b.getContent() %></a></td>
 		<td align="center" width="25%"><%=b.getCreatedDate().toString() %></td>
 	</tr>
 <%

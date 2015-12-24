@@ -100,5 +100,27 @@ public class ControllerServlet implements Servlet
 				e.printStackTrace();
 			}
 		}
+		else if(action.equals("modifing"))
+		{
+			try {
+				//Get the data
+				int num = Integer.parseInt(request.getParameter("num"));
+				BoardDTO board = dao.get(num);
+				
+				//Save in attribute. Then call modify page.
+				RequestDispatcher rd = request.getRequestDispatcher("./board_modify.jsp");
+				request.setAttribute("data", board);
+				rd.forward(request, response);
+			}
+			catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}	
 }

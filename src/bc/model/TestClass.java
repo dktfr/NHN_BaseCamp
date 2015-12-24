@@ -7,11 +7,11 @@ import static org.junit.Assert.assertThat;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 
 public class TestClass
 {
-	@Test
+	//@Test
 	public void testAddAndGet()
 	{
 		ConnectionMaker conMaker = new ConMakerClass();
@@ -47,6 +47,48 @@ public class TestClass
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGet()
+	{
+		ConnectionMaker conMaker = new ConMakerClass();
+		BoardDAO dao = new BoardDAO(conMaker);
+		
+		try {
+			BoardDTO b1 = dao.get(5);
+			
+			assertThat(b1, notNullValue());
+			System.out.println(b1.toString());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModifyAndGetModified()
+	{
+		ConnectionMaker conMaker = new ConMakerClass();
+		BoardDAO dao = new BoardDAO(conMaker);
+		
+		BoardDTO board1 = new BoardDTO(0, "dktfr@naver.com", "111", "C1", null);
+		
+		board1.setNum(1);
+		
+		try {
+			dao.modify(board1);
+			assertThat(dao.getModifiedDate(board1.getNum()), notNullValue());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -20,7 +20,7 @@ public class BoardDAO
 	{	
 		//Get Connection
 		Connection dbCon = conMaker.makeConnection();
-		//Prepare Statement. Then execute that statement.
+		//Prepare Statement for insert. Then execute that statement.
 		PreparedStatement ps = dbCon.prepareStatement("insert into board(email, pwd, content, createdDate) values (?,?,?,now())");
 		ps.setString(1, board.getEmail());
 		ps.setString(2, board.getPwd());
@@ -29,6 +29,68 @@ public class BoardDAO
 		//Close objects.
 		ps.close();
 		dbCon.close();
+	}
+	
+	public BoardDTO get(int num) throws SQLException, ClassNotFoundException
+	{
+		BoardDTO result = null;
+		//Get Connection
+		Connection dbCon = conMaker.makeConnection();
+		//Prepare Statement for modified Date. Then execute that statement.
+		PreparedStatement ps = dbCon.prepareStatement("select * from board where num = ?");
+		ps.setInt(1, num);
+		ResultSet rs = ps.executeQuery();
+		//Get the modified date.
+		if(rs.next())
+		{
+			result = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)));
+		}
+		//Close objects.
+		rs.close();
+		ps.close();
+		dbCon.close();
+		return result;
+	}
+	
+	public void modify(BoardDTO board) throws SQLException, ClassNotFoundException
+	{
+		//Get Connection
+		Connection dbCon = conMaker.makeConnection();
+		//Prepare Statement for modified Date. Then execute that statement.
+		PreparedStatement ps = dbCon.prepareStatement("insert into modified(num, modifiedDate) values (?,now()) on duplicate key update modifiedDate = now()");
+		ps.setInt(1, board.getNum());
+		ps.execute();
+		//First statement close
+		ps.close();
+		//Prepare Statement for update content.
+		PreparedStatement ps1 = dbCon.prepareStatement("update board set content = ? where num = ?");
+		ps1.setString(1, board.getContent());
+		ps1.setInt(2, board.getNum());
+		ps1.execute();
+		//Second statement close & connection close
+		ps1.close();
+		dbCon.close();
+	}
+	
+	public Timestamp getModifiedDate(int num) throws SQLException, ClassNotFoundException
+	{
+		Timestamp modifiedDate = null;
+		//Get Connection
+		Connection dbCon = conMaker.makeConnection();
+		//Prepare Statement. Then Get result set
+		PreparedStatement ps = dbCon.prepareStatement("select modifiedDate from modified where num = ?");
+		ps.setInt(1, num);
+		ResultSet rs = ps.executeQuery();
+		//Get the modified date.
+		if(rs.next())
+		{
+			modifiedDate = Timestamp.valueOf(rs.getString(1));
+		}
+		//Close objects.
+		rs.close();
+		ps.close();
+		dbCon.close();
+		return modifiedDate;
 	}
 	
 	public ArrayList<BoardDTO> getAll() throws SQLException, ClassNotFoundException
