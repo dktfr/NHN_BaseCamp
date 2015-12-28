@@ -9,15 +9,17 @@ public class BoardDTO
 	private String pwd;
 	private String content;
 	private Timestamp createdDate;
+	private Timestamp modifiedDate;
 	
 	public BoardDTO() {}
-	public BoardDTO(int num, String email, String pwd, String content, Timestamp createdDate)
+	public BoardDTO(int num, String email, String pwd, String content, Timestamp createdDate, Timestamp modifiedDate)
 	{
 		this.num = num;
 		this.email = email;
 		this.pwd = pwd;
 		this.content = content;
 		this.createdDate = createdDate;
+		this.modifiedDate = modifiedDate;
 	}
 	
 	@Override
@@ -44,6 +46,19 @@ public class BoardDTO
 	public String getContent() { return content; }
 	public void setContent(String content) { this.content = content; }
 	
+	public String getCreatedDateToString()
+	{
+		int length = createdDate.toString().length();
+		return createdDate.toString().substring(0, length-2);
+	}
 	public Timestamp getCreatedDate() { return createdDate; }
 	public void setCreatedDate(Timestamp createdDate) { this.createdDate = createdDate; }
+	
+	public String getModifiedDateToString()
+	{
+		int length = modifiedDate.toString().length();
+		return modifiedDate.toString().substring(0, length-2);
+	}
+	public Timestamp getModifiedDate() { return modifiedDate; }
+	public void setModifiedDate(Timestamp modifiedDate) { this.modifiedDate = modifiedDate; }
 }

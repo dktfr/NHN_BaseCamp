@@ -37,13 +37,22 @@ public class BoardDAO
 		//Get Connection
 		Connection dbCon = conMaker.makeConnection();
 		//Prepare Statement for modified Date. Then execute that statement.
-		PreparedStatement ps = dbCon.prepareStatement("select * from board where num = ?");
+		PreparedStatement ps = dbCon.prepareStatement("select b.num, b.email, b.pwd, b.content, b.createdDate, m.modifiedDate from board b left outer join modified m on b.num = m.num where b.num = ? order by modifiedDate desc, createdDate desc");
 		ps.setInt(1, num);
 		ResultSet rs = ps.executeQuery();
 		//Get the modified date.
 		if(rs.next())
 		{
-			result = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)));
+			//Exception handling about Timestamp.valueOf(). Because modifiedDate can be null.
+			try
+			{
+				result = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)), Timestamp.valueOf(rs.getString(6)));
+			}
+			//When modifiedDate is null, It matches with createdDate.
+			catch(IllegalArgumentException e)
+			{
+				result = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)), Timestamp.valueOf(rs.getString(5)));
+			}
 		}
 		//Close objects.
 		rs.close();
@@ -100,13 +109,22 @@ public class BoardDAO
 		//Get Connection
 		Connection dbCon = conMaker.makeConnection();
 		//Prepare Statement.
-		PreparedStatement ps = dbCon.prepareStatement("select * from board");
+		PreparedStatement ps = dbCon.prepareStatement("select b.num, b.email, b.pwd, b.content, b.createdDate, m.modifiedDate from board b left outer join modified m on b.num = m.num order by modifiedDate desc, createdDate desc");
 		//Execute that statement. Then Get result set
 		ResultSet rs = ps.executeQuery();
 		//Save the result to list.
 		while(rs.next())
 		{
-			boardList.add(new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5))));
+			//Exception handling about Timestamp.valueOf(). Because modifiedDate can be null.
+			try
+			{
+				boardList.add(new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)), Timestamp.valueOf(rs.getString(6))));
+			}
+			//When modifiedDate is null, It matches with createdDate.
+			catch(IllegalArgumentException e)
+			{
+				boardList.add(new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), Timestamp.valueOf(rs.getString(5)), Timestamp.valueOf(rs.getString(5))));
+			}
 		}
 		//Close objects.
 		rs.close();

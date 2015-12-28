@@ -13,6 +13,8 @@
 <%
 	ArrayList<BoardDTO> list = (ArrayList<BoardDTO>)request.getAttribute("list");
 %>
+<a href="./board_add.html">[INSERT]</a>
+<br>
 <table width="100%" border="1">
 	<tr>
 		<th>E-mail</th>
@@ -26,14 +28,12 @@
 	<tr>
 		<td align="center" width="20%"><%=b.getEmail() %></td>
 		<td align="center" width="55%"><a href="./ControllerServlet?action=modifing&num=<%=b.getNum()%>"><%=b.getContent() %></a></td>
-		<td align="center" width="25%"><%=b.getCreatedDate().toString() %></td>
+		<td align="center" width="25%"><%=b.getModifiedDateToString() %></td>
 	</tr>
 <%
 	}
 %>
 </table>
-<br>
-<a href="./board_add.html">[INSERT]</a>
 </center>
 </body>
 </html>

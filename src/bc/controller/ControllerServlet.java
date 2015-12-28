@@ -1,6 +1,7 @@
 package bc.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ import bc.model.ConnectionMaker;
 public class ControllerServlet implements Servlet
 {
 	BoardDAO dao;
+	EmailValidator validator;
 	/**
 	 * 
 	 */
@@ -31,6 +33,8 @@ public class ControllerServlet implements Servlet
 		
 		ConnectionMaker conMaker = new ConMakerClass();
 		dao = new BoardDAO(conMaker);
+		
+		validator = new EmailValidator();
 	}
 	
 	@Override
@@ -82,22 +86,35 @@ public class ControllerServlet implements Servlet
 			String email = request.getParameter("email");
 			String pwd = request.getParameter("pwd");
 			String content = request.getParameter("content");
-			BoardDTO newBoard = new BoardDTO(0, email, pwd, content, null);
 			
-			try {
-				//Add action via DAO
-				dao.add(newBoard);
+			//Valid Checking the email.
+			if(!validator.validate(email))
+			{
+				//Invalid email. Send fail result message
+				PrintWriter writer = response.getWriter();
+				writer.print("fail");
+				writer.close();
+			}
+			else
+			{
+				//Valid email. Process next
+				BoardDTO newBoard = new BoardDTO(0, email, pwd, content, null, null);
 				
-				//Recursive Request itself because of list
-				RequestDispatcher rd = request.getRequestDispatcher("./ControllerServlet?action=list");
-				rd.forward(request, response);
-				
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					//Add action via DAO
+					dao.add(newBoard);
+					//Send success result message.
+					PrintWriter writer = response.getWriter();
+					writer.print("success");
+					writer.close();
+					
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		else if(action.equals("modifing"))
@@ -111,6 +128,44 @@ public class ControllerServlet implements Servlet
 				RequestDispatcher rd = request.getRequestDispatcher("./board_modify.jsp");
 				request.setAttribute("data", board);
 				rd.forward(request, response);
+			}
+			catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(action.equals("modified"))
+		{
+			try
+			{
+				//Get the data
+				String password = request.getParameter("pwd");
+				String content = request.getParameter("content");
+				int num = Integer.parseInt(request.getParameter("num"));
+				//Get the data from db
+				BoardDTO board = dao.get(num);
+				
+				//Check the password. If password is correct, update the content
+				if(board.getPwd().equals(password))
+				{
+					board.setContent(content);
+					dao.modify(board);
+					PrintWriter writer = response.getWriter();
+					writer.print("success");
+					writer.close();
+				}
+				//Else then fail error
+				else
+				{
+					PrintWriter writer = response.getWriter();
+					writer.print("fail");
+					writer.close();
+				}
 			}
 			catch (NumberFormatException e) {
 				e.printStackTrace();
