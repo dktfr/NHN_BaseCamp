@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.GenericServlet;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -17,7 +17,7 @@ import bc.model.BoardDTO;
 import bc.model.ConMakerClass;
 import bc.model.ConnectionMaker;
 
-public class ControllerServlet implements Servlet
+public class ControllerServlet extends GenericServlet
 {
 	BoardDAO dao;
 	EmailValidator validator;
@@ -27,8 +27,9 @@ public class ControllerServlet implements Servlet
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-	public void init(ServletConfig arg0) throws ServletException {
+	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
+		super.init(config);
 		System.out.println("Init");
 		
 		ConnectionMaker conMaker = new ConMakerClass();
