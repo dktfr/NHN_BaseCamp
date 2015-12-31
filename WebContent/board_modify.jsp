@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	$(document).ready(function ()
 	{
+		//button click event
 		$('input[type=button]').click(function ()
 			{
 				$.ajax(

@@ -5,13 +5,14 @@
 <script type="text/javascript">
 	$(document).ready(function ()
 	{
+		//button click event
 		$('input[type=button]').click(function()
 			{
+				//email valid check by using regular expression
 				var email = $('input[type=text]').val();
 				var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 				if(email_regex.test(email))
 				{
-					alert("test?");
 					$.ajax(
 						{
 							type: "POST",

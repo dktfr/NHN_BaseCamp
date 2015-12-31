@@ -2,9 +2,29 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
   <display-name>BaseCamp</display-name>
 
+	<!-- Init Parameter about JDBC -->
+	<context-param>
+		<param-name>driver</param-name>
+		<param-value>com.mysql.jdbc.Driver</param-value>
+	</context-param>
+	<context-param>
+		<param-name>driverUrl</param-name>
+		<param-value>jdbc:mysql://localhost/basecamp_db</param-value>
+	</context-param>
+	<context-param>
+		<param-name>userName</param-name>
+		<param-value>study</param-value>
+	</context-param>
+	<context-param>
+		<param-name>password</param-name>
+		<param-value>study</param-value>
+	</context-param>
+	
+	<!-- Servlet Definition -->
 	<servlet>
 		<servlet-name>ControllerServlet</servlet-name>
 		<servlet-class>bc.controller.ControllerServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
 	</servlet>
   
   <servlet-mapping>

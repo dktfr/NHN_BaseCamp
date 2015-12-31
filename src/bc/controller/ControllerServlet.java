@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.servlet.GenericServlet;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -32,7 +33,11 @@ public class ControllerServlet extends GenericServlet
 		super.init(config);
 		System.out.println("Init");
 		
-		ConnectionMaker conMaker = new ConMakerClass();
+		/*
+		 * NOTE - When developer doesn't implement getServletConfig method, getServletContext must throw NullPointerException.
+		 */
+		ServletContext sc = this.getServletContext();
+		ConnectionMaker conMaker = new ConMakerClass(sc);
 		dao = new BoardDAO(conMaker);
 		
 		validator = new EmailValidator();
@@ -41,21 +46,8 @@ public class ControllerServlet extends GenericServlet
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-		
+		super.destroy();
 	}
-
-	@Override
-	public ServletConfig getServletConfig() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getServletInfo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 	@Override
 	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException
